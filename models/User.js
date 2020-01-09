@@ -15,6 +15,11 @@ const UserSchema = new Schema({
     type: String,
     required: true
   },
+  language: {
+    type: String,
+    enum: ["en", "es"],
+    default: "en"
+  },
   date: {
     type: Date,
     default: Date.now
