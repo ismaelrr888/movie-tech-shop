@@ -4,8 +4,8 @@ const bodyParser = require("body-parser");
 const passport = require("passport");
 
 const users = require("./routes/api/users");
-// const movies = require("./routes/api/movies");
-// const cart = require("./routes/api/cart");
+const movies = require("./routes/api/movies");
+const cart = require("./routes/api/cart");
 
 const app = express();
 
@@ -30,8 +30,8 @@ require("./config/passport")(passport);
 
 // Use Routes
 app.use("/api/users", users);
-// app.use("/api/cart", cart);
-// app.use("/api/movies", movies);
+app.use("/api/movies", movies);
+app.use("/api/carts", cart);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Server runing on port ${port}`));
