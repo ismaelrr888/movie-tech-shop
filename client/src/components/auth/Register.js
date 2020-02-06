@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-import { useSelector, useDispatch } from "react-redux";
+import { connect } from "react-redux";
 
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import PropTypes from "prop-types";
 
@@ -37,14 +37,8 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function SignUp() {
+const SignUp = props => {
   const classes = useStyles();
-
-  const dispatch = useDispatch();
-
-  let history = useHistory();
-
-  const errors = useSelector(state => state.errors);
 
   const [state, setState] = useState({
     name: "",
@@ -58,6 +52,12 @@ export default function SignUp() {
     setState(prevState => ({ ...prevState, [name]: value }));
   }
 
+  const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    setErrors(props.errors);
+  }, [props.errors]);
+
   function onSubmit(e) {
     e.preventDefault();
 
@@ -69,7 +69,7 @@ export default function SignUp() {
       password2: state.password2
     };
 
-    dispatch(registerUser(newUser, history));
+    props.registerUser(newUser, props.history);
   }
 
   return (
@@ -186,9 +186,16 @@ export default function SignUp() {
       </div>
     </div>
   );
-}
+};
 
 SignUp.propTypes = {
-  state: PropTypes.object,
-  setState: PropTypes.func
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired
 };
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+  errors: state.errors
+});
+
+export default connect(mapStateToProps, { registerUser })(SignUp);
