@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 
-import { connect } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
-import { Link } from "react-router-dom";
-
-import PropTypes from "prop-types";
+import { Link, useHistory } from "react-router-dom";
 
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
@@ -37,8 +35,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const SignUp = props => {
+const SignUp = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const errors = useSelector(state => state.errors);
 
   const [state, setState] = useState({
     name: "",
@@ -47,18 +49,12 @@ const SignUp = props => {
     password: "",
     password2: ""
   });
-  function onChange(event) {
+  const onChange = event => {
     const { name, value } = event.target;
     setState(prevState => ({ ...prevState, [name]: value }));
-  }
+  };
 
-  const [errors, setErrors] = useState({});
-
-  useEffect(() => {
-    setErrors(props.errors);
-  }, [props.errors]);
-
-  function onSubmit(e) {
+  const onSubmit = e => {
     e.preventDefault();
 
     const newUser = {
@@ -69,8 +65,8 @@ const SignUp = props => {
       password2: state.password2
     };
 
-    props.registerUser(newUser, props.history);
-  }
+    dispatch(registerUser(newUser, history));
+  };
 
   return (
     <div>
@@ -188,14 +184,4 @@ const SignUp = props => {
   );
 };
 
-SignUp.propTypes = {
-  auth: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
-};
-
-const mapStateToProps = state => ({
-  auth: state.auth,
-  errors: state.errors
-});
-
-export default connect(mapStateToProps, { registerUser })(SignUp);
+export default SignUp;
