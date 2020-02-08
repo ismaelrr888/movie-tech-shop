@@ -1,6 +1,3 @@
-import React from "react";
-import { Link } from "react-router-dom";
-
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -11,6 +8,12 @@ import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
+
+import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { Link, useHistory } from "react-router-dom";
+
+import { loginUser } from "../../store/actions/authActions";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -34,6 +37,30 @@ const useStyles = makeStyles(theme => ({
 
 export default function SignIn() {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const errors = useSelector(state => state.errors);
+
+  const [state, setState] = useState({
+    email: "",
+    password: ""
+  });
+  const onChange = event => {
+    const { name, value } = event.target;
+    setState(prevState => ({ ...prevState, [name]: value }));
+  };
+
+  const onSubmit = e => {
+    e.preventDefault();
+
+    const userData = {
+      email: state.email,
+      password: state.password
+    };
+
+    dispatch(loginUser(userData, history));
+  };
 
   return (
     <div>
@@ -45,7 +72,7 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form onSubmit={onSubmit} className={classes.form} noValidate>
           <TextField
             variant="outlined"
             margin="normal"
@@ -54,6 +81,10 @@ export default function SignIn() {
             id="email"
             label="Email Address"
             name="email"
+            value={state.email}
+            error={errors.email ? true : false}
+            helperText={errors.email}
+            onChange={onChange}
             autoComplete="email"
             autoFocus
           />
@@ -63,15 +94,19 @@ export default function SignIn() {
             required
             fullWidth
             name="password"
+            value={state.password}
+            onChange={onChange}
+            error={errors.password ? true : false}
+            helperText={errors.password}
             label="Password"
             type="password"
             id="password"
             autoComplete="current-password"
           />
-          <FormControlLabel
+          {/* <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
-          />
+          /> */}
           <Button
             type="submit"
             fullWidth
