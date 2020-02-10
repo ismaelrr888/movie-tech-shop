@@ -44,7 +44,7 @@ router.post("/register", (req, res) => {
                 message: `The user with name ${user.name} was created successful`
               })
             )
-            .catch(err => console.log(err));
+            .catch(err => res.status(400).json(err));
         });
       });
     }
