@@ -30,7 +30,6 @@ export const setCurrentUser = decoded => {
 };
 
 export const checkAuthTimeout = (expirationTime, history) => dispatch => {
-  console.log(expirationTime);
   setTimeout(() => {
     dispatch(logoutUser(history));
   }, expirationTime);
