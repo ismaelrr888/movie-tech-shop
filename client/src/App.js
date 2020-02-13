@@ -12,6 +12,7 @@ import store from "./store/store";
 import setAuthToken from "./utils/setAuthToken";
 import jwt_decode from "jwt-decode";
 import { setCurrentUser, logoutUser } from "./store/actions/authActions";
+import Movie from "./components/movie/Movie";
 
 if (localStorage.jwtToken) {
   setAuthToken(localStorage.jwtToken);
@@ -31,6 +32,9 @@ function App() {
       <Router>
         <div className="App">
           <Navbar />
+          <Container component="main" maxWidth="lg">
+            <Route exact path="/" component={Movie} />
+          </Container>
           <Container component="main" maxWidth="xs">
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />

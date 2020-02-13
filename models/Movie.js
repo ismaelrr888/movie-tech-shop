@@ -7,7 +7,7 @@ const MovieSchema = new Schema({
     required: true
   },
   genre: {
-    type: [String],
+    type: String,
     required: true
   },
   price: {

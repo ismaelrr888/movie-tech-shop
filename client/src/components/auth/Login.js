@@ -9,7 +9,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import Alert from "../common/alerts/Alert";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
 
