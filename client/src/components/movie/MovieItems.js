@@ -10,6 +10,7 @@ import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
+import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 
 import defaultImage from "../../img/showcase.jpg";
 
@@ -74,6 +75,18 @@ export default function MovieItems(props) {
           size="small"
         >
           <AddIcon />
+        </Button>
+      </CardActions>
+      <CardActions>
+        <Button
+          style={{ width: "100%" }}
+          variant="contained"
+          color="secondary"
+          size="large"
+          className={classes.button}
+          startIcon={<ShoppingCartIcon />}
+        >
+          Add
         </Button>
       </CardActions>
     </Card>
