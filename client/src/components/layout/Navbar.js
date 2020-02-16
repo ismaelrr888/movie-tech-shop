@@ -4,7 +4,9 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -34,10 +36,69 @@ const useStyles = makeStyles(theme => ({
 
 export default function PrimarySearchAppBar() {
   const classes = useStyles();
+
   const dispatch = useDispatch();
   const history = useHistory();
 
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = event => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = parameter => {
+    setAnchorEl(null);
+    switch (parameter) {
+      case "logout":
+        dispatch(logoutUser(history));
+        break;
+
+      default:
+        break;
+    }
+  };
+
   const { isAuthenticated, user } = useSelector(state => state.auth);
+
+  let menuUser;
+  if (isAuthenticated && user) {
+    menuUser = (
+      <div>
+        <IconButton
+          aria-label="more"
+          aria-controls="long-menu"
+          aria-haspopup="true"
+          onClick={handleClick}
+          color="inherit"
+        >
+          <MoreVertIcon />
+        </IconButton>
+        <Menu
+          id="long-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={open}
+          onClose={handleClose}
+          PaperProps={{
+            style: {
+              width: 200
+            }
+          }}
+        >
+          {/* TODO */}
+          {/* <MenuItem onClick={handleClose}>My profile</MenuItem>
+          <MenuItem onClick={handleClose}>Change password</MenuItem> */}
+          <MenuItem onClick={handleClose.bind(null, "logout")}>Logut</MenuItem>
+        </Menu>
+      </div>
+    );
+  } else {
+    menuUser = (
+      <Link to="/login" className={classes.link}>
+        Login
+      </Link>
+    );
+  }
 
   return (
     <div className={classes.root}>
@@ -71,9 +132,16 @@ export default function PrimarySearchAppBar() {
                 </Typography>
               </Link>
             </Grid>
-            <Link to="/login" className={classes.link}>
-              <AccountCircleIcon /> Login
-            </Link>
+            <Grid
+              container
+              direction="row"
+              justify="flex-end"
+              wrap="nowrap"
+              alignItems="center"
+              style={{ width: "10%", minWidth: "77px" }}
+            >
+              {menuUser}
+            </Grid>
           </Grid>
         </Toolbar>
       </AppBar>
