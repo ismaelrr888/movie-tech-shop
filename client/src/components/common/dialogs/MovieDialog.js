@@ -13,7 +13,8 @@ export default function MovieDialog({
   movie,
   show,
   handleCloseModal,
-  isAuthenticated
+  isAuthenticated,
+  quantity
 }) {
   const [open, setOpen] = React.useState(false);
 
@@ -27,7 +28,9 @@ export default function MovieDialog({
   };
 
   useEffect(() => {
-    if (show) handleClickOpen();
+    if (show) {
+      handleClickOpen();
+    }
   }, [show]);
 
   return (
@@ -39,7 +42,7 @@ export default function MovieDialog({
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {movie.title} PRICE: {movie.price}
+          {movie.title} (QUANTITY: {quantity}, PRICE: {movie.price * quantity})
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">

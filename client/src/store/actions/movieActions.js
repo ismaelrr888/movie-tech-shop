@@ -1,5 +1,5 @@
 import axios from "../../axios";
-import { LOADING_MOVIES, GET_MOVIES } from "./types";
+import { LOADING_MOVIES, GET_MOVIES, GET_ALL_MOVIES } from "./types";
 
 export const setMoviesLoading = () => {
   return {
@@ -11,7 +11,7 @@ export const getMovies = data => dispatch => {
   dispatch(setMoviesLoading());
   axios
     .get(
-      `/movies/searchby?search=${data.search}&sortBy=${data.sortBy}&resPerPage=${data.resPerPage}`
+      `/movies/searchby?search=${data.search}&sortBy=${data.sortBy}&resPerPage=${data.resPerPage}&page=${data.page}`
     )
     .then(res =>
       dispatch({
@@ -25,4 +25,13 @@ export const getMovies = data => dispatch => {
         payload: null
       })
     );
+};
+
+export const getAllMovies = () => dispatch => {
+  axios.get("/movies/all").then(res =>
+    dispatch({
+      type: GET_ALL_MOVIES,
+      payload: res.data
+    })
+  );
 };

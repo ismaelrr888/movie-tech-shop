@@ -39,12 +39,15 @@ const useStyles = makeStyles(theme => ({
 export default function MovieItems({ movie, isAuthenticated }) {
   const classes = useStyles();
 
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState(1);
 
   const [show, setShow] = useState(false);
 
   const handleShow = () => {
     setShow(true);
+    if (quantity === 0) {
+      setQuantity(1);
+    }
   };
 
   const handleClose = () => {
@@ -60,7 +63,7 @@ export default function MovieItems({ movie, isAuthenticated }) {
             image={defaultImage}
             title={movie.title}
           />
-          <CardContent>
+          <CardContent style={{ padding: "22px" }}>
             <Typography gutterBottom variant="h5" component="h2">
               {truncate(movie.title, 15)}
             </Typography>
@@ -114,6 +117,7 @@ export default function MovieItems({ movie, isAuthenticated }) {
         show={show}
         handleCloseModal={handleClose}
         isAuthenticated={isAuthenticated}
+        quantity={quantity}
       />
     </div>
   );

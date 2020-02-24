@@ -1,4 +1,4 @@
-import { GET_MOVIES, LOADING_MOVIES } from "../actions/types";
+import { GET_MOVIES, LOADING_MOVIES, GET_ALL_MOVIES } from "../actions/types";
 
 const initialState = {
   movies: [],
@@ -17,6 +17,11 @@ export default function(state = initialState, action) {
         ...state,
         movies: action.payload,
         loading: false
+      };
+    case GET_ALL_MOVIES:
+      return {
+        ...state,
+        total: action.payload.length
       };
     default:
       return state;
