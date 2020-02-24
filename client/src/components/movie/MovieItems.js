@@ -67,6 +67,9 @@ export default function MovieItems({ movie, isAuthenticated }) {
             <Typography variant="body2" color="textSecondary" component="p">
               {truncate(movie.description, 80)}
             </Typography>
+            <Typography variant="body2" color="textSecondary" component="p">
+              <b>PRICE: {movie.price * (quantity === 0 ? 1 : quantity)}</b>
+            </Typography>
           </CardContent>
         </CardActionArea>
         <CardActions>

@@ -38,17 +38,17 @@ export default function MovieDialog({
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{movie.title}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">
+          {movie.title} PRICE: {movie.price}
+        </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            <div>
-              <img
-                width={"100%"}
-                style={{ objectFit: "cover", height: "20em" }}
-                src={defaultImage}
-              />{" "}
-              {movie.description}
-            </div>
+            <img
+              width={"100%"}
+              style={{ objectFit: "cover", height: "20em" }}
+              src={defaultImage}
+            />{" "}
+            {movie.description}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
