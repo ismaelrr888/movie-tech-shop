@@ -35,6 +35,7 @@ export default function Movie() {
   });
 
   const { movies, loading } = useSelector(state => state.movies);
+  const { isAuthenticated, user } = useSelector(state => state.auth);
 
   useEffect(() => {
     dispatch(getMovies(data));
@@ -45,7 +46,7 @@ export default function Movie() {
     movieContent = <SkeletonMovie />;
   } else {
     movieContent = movies.map((movie, index) => (
-      <MovieItems key={index} movie={movie} />
+      <MovieItems key={index} movie={movie} isAuthenticated={isAuthenticated} />
     ));
   }
 

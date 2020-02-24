@@ -16,6 +16,8 @@ import defaultImage from "../../img/showcase.jpg";
 
 import { truncate } from "../../utils/Util";
 
+import MovieDialog from "../common/dialogs/MovieDialog";
+
 const useStyles = makeStyles(theme => ({
   root: {
     maxWidth: 270,
@@ -34,61 +36,82 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function MovieItems(props) {
+export default function MovieItems({ movie, isAuthenticated }) {
   const classes = useStyles();
 
   const [quantity, setQuantity] = useState(0);
+
+  const [show, setShow] = useState(false);
+
+  const handleShow = () => {
+    setShow(true);
+  };
+
+  const handleClose = () => {
+    setShow(false);
+  };
+
   return (
-    <Card className={classes.root}>
-      <CardActionArea>
-        <CardMedia
-          className={classes.media}
-          image={defaultImage}
-          title={props.movie.title}
-        />
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
-            {truncate(props.movie.title, 15)}
-          </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
-            {truncate(props.movie.description, 80)}
-          </Typography>
-        </CardContent>
-      </CardActionArea>
-      <CardActions>
-        <Button
-          onClick={setQuantity.bind(null, quantity - 1)}
-          variant="contained"
-          color="secondary"
-          size="small"
-          disabled={quantity === 0 ? true : false}
-        >
-          <RemoveIcon />
-        </Button>
-        <Box className={classes.InputQuantity} boxShadow={1}>
-          {quantity !== 0 ? quantity : "_"}
-        </Box>
-        <Button
-          onClick={setQuantity.bind(null, quantity + 1)}
-          variant="contained"
-          color="primary"
-          size="small"
-        >
-          <AddIcon />
-        </Button>
-      </CardActions>
-      <CardActions>
-        <Button
-          style={{ width: "100%" }}
-          variant="contained"
-          color="secondary"
-          size="large"
-          className={classes.button}
-          startIcon={<ShoppingCartIcon />}
-        >
-          Add
-        </Button>
-      </CardActions>
-    </Card>
+    <div>
+      <Card className={classes.root}>
+        <CardActionArea onClick={handleShow}>
+          <CardMedia
+            className={classes.media}
+            image={defaultImage}
+            title={movie.title}
+          />
+          <CardContent>
+            <Typography gutterBottom variant="h5" component="h2">
+              {truncate(movie.title, 15)}
+            </Typography>
+            <Typography variant="body2" color="textSecondary" component="p">
+              {truncate(movie.description, 80)}
+            </Typography>
+          </CardContent>
+        </CardActionArea>
+        <CardActions>
+          <Button
+            onClick={setQuantity.bind(null, quantity - 1)}
+            variant="contained"
+            color="secondary"
+            size="small"
+            disabled={quantity === 0 ? true : false}
+          >
+            <RemoveIcon />
+          </Button>
+          <Box className={classes.InputQuantity} boxShadow={1}>
+            {quantity !== 0 ? quantity : "_"}
+          </Box>
+          <Button
+            onClick={setQuantity.bind(null, quantity + 1)}
+            variant="contained"
+            color="primary"
+            size="small"
+          >
+            <AddIcon />
+          </Button>
+        </CardActions>
+        <CardActions>
+          <Button
+            style={{ width: "100%" }}
+            variant="contained"
+            color="secondary"
+            size="large"
+            className={classes.button}
+            startIcon={<ShoppingCartIcon />}
+            disabled={!isAuthenticated}
+          >
+            Add
+          </Button>
+        </CardActions>
+      </Card>
+
+      <MovieDialog
+        movie={movie}
+        show={show}
+        handleCloseModal={handleClose}
+        isAuthenticated={isAuthenticated}
+      />
+    </div>
   );
 }
