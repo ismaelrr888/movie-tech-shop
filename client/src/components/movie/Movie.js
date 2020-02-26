@@ -7,14 +7,8 @@ import { getMovies, getAllMovies } from "../../store/actions/movieActions";
 import SkeletonMovie from "./SkeletonMovie";
 import Divider from "@material-ui/core/Divider";
 
-import SkipPreviousIcon from "@material-ui/icons/SkipPrevious";
-import SkipNextIcon from "@material-ui/icons/SkipNext";
-import PostAddIcon from "@material-ui/icons/PostAdd";
-
-import Button from "@material-ui/core/Button";
-import ButtonGroup from "@material-ui/core/ButtonGroup";
-
 import MovieItems from "./MovieItems";
+import Paginate from "../common/paginate/Paginate";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -42,13 +36,52 @@ export default function Movie() {
     }));
   };
 
+  const myCallBack = type => {
+    switch (type) {
+      case "PREVIOWS":
+        onChangeData({
+          page: data.page - 1,
+          search: data.search,
+          resPerPage: data.resPerPage
+        });
+        return data;
+      case "NEXT":
+        onChangeData({
+          page: data.page + 1,
+          search: data.search,
+          resPerPage: data.resPerPage
+        });
+        return data;
+      case "VIEW_LESS":
+        onChangeData({
+          page: data.page,
+          search: data.search,
+          resPerPage: data.resPerPage - 10
+        });
+        return data;
+      case "VIEW_MORE":
+        onChangeData({
+          page: data.page,
+          search: data.search,
+          resPerPage: data.resPerPage + 10
+        });
+        return data;
+
+      default:
+        return data;
+    }
+  };
+
   const { movies, loading, total } = useSelector(state => state.movies);
-  const { isAuthenticated, user } = useSelector(state => state.auth);
+  const { isAuthenticated } = useSelector(state => state.auth);
 
   useEffect(() => {
     dispatch(getMovies(data));
+  }, [data, dispatch]);
+
+  useEffect(() => {
     dispatch(getAllMovies());
-  }, [data]);
+  }, [dispatch]);
 
   let movieContent;
   if (movies === null || loading) {
@@ -67,35 +100,7 @@ export default function Movie() {
         justify="flex-end"
         alignItems="flex-start"
       >
-        <ButtonGroup
-          color="secondary"
-          aria-label="outlined secondary button group"
-        >
-          <Button
-            disabled={data.page <= 1}
-            onClick={() =>
-              onChangeData({
-                page: data.page - 1,
-                search: data.search,
-                resPerPage: data.resPerPage
-              })
-            }
-          >
-            <SkipPreviousIcon />
-          </Button>
-          <Button
-            disabled={data.page >= total / data.resPerPage}
-            onClick={() =>
-              onChangeData({
-                page: data.page + 1,
-                search: data.search,
-                resPerPage: data.resPerPage
-              })
-            }
-          >
-            <SkipNextIcon />
-          </Button>
-        </ButtonGroup>
+        <Paginate data={data} total={total} handleClick={myCallBack} />
       </Grid>
       <Grid
         container
@@ -118,49 +123,7 @@ export default function Movie() {
         justify="flex-end"
         alignItems="flex-start"
       >
-        <ButtonGroup
-          style={{ marginTop: "10px" }}
-          color="secondary"
-          aria-label="outlined secondary button group"
-        >
-          <Button
-            disabled={data.page <= 1}
-            onClick={() =>
-              onChangeData({
-                page: data.page - 1,
-                search: data.search,
-                resPerPage: data.resPerPage
-              })
-            }
-          >
-            <SkipPreviousIcon />
-          </Button>
-          <Button
-            disabled={data.page >= total / data.resPerPage}
-            onClick={() =>
-              onChangeData({
-                page: data.page + 1,
-                search: data.search,
-                resPerPage: data.resPerPage
-              })
-            }
-          >
-            <SkipNextIcon />
-          </Button>{" "}
-          <Button
-            disabled={data.page >= total / data.resPerPage}
-            color="primary"
-            onClick={() =>
-              onChangeData({
-                page: data.page,
-                search: data.search,
-                resPerPage: data.resPerPage + 10
-              })
-            }
-          >
-            <PostAddIcon /> View more
-          </Button>
-        </ButtonGroup>
+        <Paginate data={data} total={total} handleClick={myCallBack} />
       </Grid>
     </div>
   );

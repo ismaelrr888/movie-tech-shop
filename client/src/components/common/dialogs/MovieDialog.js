@@ -50,6 +50,7 @@ export default function MovieDialog({
               width={"100%"}
               style={{ objectFit: "cover", height: "20em" }}
               src={defaultImage}
+              alt={movie.title}
             />{" "}
             {movie.description}
           </DialogContentText>
