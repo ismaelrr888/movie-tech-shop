@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
@@ -11,12 +13,11 @@ import Box from "@material-ui/core/Box";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
-
+import CircularProgress from "@material-ui/core/CircularProgress";
 import defaultImage from "../../img/showcase.jpg";
-
 import { truncate } from "../../utils/Util";
-
 import MovieDialog from "../common/dialogs/MovieDialog";
+import { addMovieToCart } from "../../store/actions/cartActions";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -38,6 +39,9 @@ const useStyles = makeStyles(theme => ({
 
 export default function MovieItems({ movie, isAuthenticated }) {
   const classes = useStyles();
+  const dispatch = useDispatch();
+
+  const { loading } = useSelector(state => state.cart);
 
   const [quantity, setQuantity] = useState(1);
 
@@ -52,6 +56,13 @@ export default function MovieItems({ movie, isAuthenticated }) {
 
   const handleClose = () => {
     setShow(false);
+  };
+
+  const onAddMovieToCart = () => {
+    console.log(quantity);
+    dispatch(
+      addMovieToCart({ movies: [{ movie: movie._id, quantity: quantity }] })
+    );
   };
 
   return (
@@ -101,13 +112,17 @@ export default function MovieItems({ movie, isAuthenticated }) {
           <Button
             style={{ width: "100%" }}
             variant="contained"
-            color="secondary"
+            color="inherit"
             size="large"
             className={classes.button}
             startIcon={<ShoppingCartIcon />}
             disabled={!isAuthenticated}
+            onClick={onAddMovieToCart}
           >
-            Add
+            Add{" "}
+            {loading ? (
+              <CircularProgress size={20} style={{ marginLeft: "14px" }} />
+            ) : null}
           </Button>
         </CardActions>
       </Card>
