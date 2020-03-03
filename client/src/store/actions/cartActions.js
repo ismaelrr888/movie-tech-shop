@@ -11,20 +11,23 @@ export const setAddMoviesLoading = () => {
   };
 };
 
-export const addMovieToCart = data => dispatch => {
-  dispatch(setAddMoviesLoading());
-  axios
-    .post("/carts", data)
-    .then(res =>
-      dispatch({
-        type: MOVIES_ADD_TO_CART,
-        payload: res.data
+export const addMovieToCart = data => dispatch =>
+  new Promise((resolve, reject) => {
+    dispatch(setAddMoviesLoading());
+    axios
+      .post("/carts", data)
+      .then(res => {
+        dispatch({
+          type: MOVIES_ADD_TO_CART,
+          payload: res.data
+        });
+        resolve(res.data);
       })
-    )
-    .catch(err =>
-      dispatch({
-        type: GET_ERRORS,
-        payload: err.response.data
-      })
-    );
-};
+      .catch(err => {
+        dispatch({
+          type: GET_ERRORS,
+          payload: err.response.data
+        });
+        reject(err.response.data);
+      });
+  });

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { makeStyles } from "@material-ui/core/styles";
+import Snackbar from "@material-ui/core/Snackbar";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardActions from "@material-ui/core/CardActions";
@@ -18,6 +19,7 @@ import defaultImage from "../../img/showcase.jpg";
 import { truncate } from "../../utils/Util";
 import MovieDialog from "../common/dialogs/MovieDialog";
 import { addMovieToCart } from "../../store/actions/cartActions";
+import Alert from "../common/alerts/Alert";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -41,11 +43,21 @@ export default function MovieItems({ movie, isAuthenticated }) {
   const classes = useStyles();
   const dispatch = useDispatch();
 
-  const { loading } = useSelector(state => state.cart);
+  const [loading, setLoading] = useState(false);
 
   const [quantity, setQuantity] = useState(1);
 
   const [show, setShow] = useState(false);
+
+  const [open, setOpen] = useState(false);
+
+  const handleCloseAlert = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   const handleShow = () => {
     setShow(true);
@@ -59,14 +71,26 @@ export default function MovieItems({ movie, isAuthenticated }) {
   };
 
   const onAddMovieToCart = () => {
-    console.log(quantity);
+    setLoading(true);
     dispatch(
-      addMovieToCart({ movies: [{ movie: movie._id, quantity: quantity }] })
-    );
+      addMovieToCart({
+        movies: [{ movie: movie._id, quantity: quantity }]
+      })
+    )
+      .then(() => {
+        setLoading(false);
+        setOpen(true);
+      })
+      .catch(err => setLoading(false));
   };
 
   return (
     <div>
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleCloseAlert}>
+        <Alert onClose={handleCloseAlert} severity="success">
+          The movie "{movie.title}" was added to cart
+        </Alert>
+      </Snackbar>
       <Card className={classes.root}>
         <CardActionArea onClick={handleShow}>
           <CardMedia

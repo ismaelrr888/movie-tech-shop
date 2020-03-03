@@ -44,8 +44,17 @@ router.post(
 
     Cart.findOne({ user: req.user.id }).then(cart => {
       if (cart) {
-        cart.movies.unshift(cartMovie);
-        cart.save().then(cart => res.json(cart));
+        cartMovie.movies.forEach(movie => {
+          cart.movies.unshift(movie);
+        });
+        cart
+          .save()
+          .then(cart =>
+            res.json({
+              movies: cart.movies,
+              message: "The movie was added to cart"
+            })
+          );
       } else {
         new Cart({
           user: req.user.id,
