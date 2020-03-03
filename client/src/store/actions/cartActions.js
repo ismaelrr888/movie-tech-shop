@@ -13,7 +13,6 @@ export const setAddMoviesLoading = () => {
 
 export const addMovieToCart = data => dispatch =>
   new Promise((resolve, reject) => {
-    dispatch(setAddMoviesLoading());
     axios
       .post("/carts", data)
       .then(res => {
